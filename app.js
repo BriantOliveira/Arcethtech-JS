@@ -57,16 +57,23 @@ app.set('views engine', 'hbs');
 //Static public directory
 app.use(express.static('./public'))
 
+
+// // 404 Error page
+// app.use(function (req, res, next) {
+//     var err = new Error('Not Found...');
+//     err.status = 404;
+//     next(err);
+// });
+// app.use(function (err, req, res, next) {
+//     if (err.status == 404) {
+//
+//         //User frendly error message display
+//         res.send('* 404 ERROR *');
+//     };
+// });
+
 // Routes
-
-// 404 Error page
-app.use((req, res, next) => {
-    if (err.status == 404) {
-
-        //User frendly error message display
-        res.send('* 404 ERROR *');
-    };
-});
+require('./routes/router.js')(app);
 
 //Listen to PORT number
 app.listen(PORT, function() {
