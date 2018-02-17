@@ -5,7 +5,7 @@
 *   v.1.0.0 Beta
 ************************************/
 
-const BodyParser = require('body-parser')
+const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const express = require('express')
 const hbs = require('express-handlebars')
@@ -45,11 +45,30 @@ let verifyAuthentication = (req, res, next) => {
 * Middlewarez
 ****************************************/
 
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
-app.use(BodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(verifyAuthentication)
 
 // Setting up the frontend  views engine
 app.engine('bhs', hbs({defaultLayout: 'main', extname: 'hbs'}));
-app.set('views engine', 'hbs')
+app.set('views engine', 'hbs');
+
+//Static public directory
+app.use(express.static('./public'))
+
+// Routes
+
+// 404 Error page
+app.use((req, res, next) => {
+    if (err.status == 404) {
+
+        //User frendly error message display
+        res.send('* 404 ERROR *');
+    };
+});
+
+//Listen to PORT number
+app.listen(PORT, function() {
+    console.log('Arcethtech listening on port ', PORT);
+});
