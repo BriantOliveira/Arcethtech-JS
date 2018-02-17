@@ -59,6 +59,7 @@ app.use(express.static('./public'))
 
 // Routes
 require('./routes/router.js')(app);
+require('./routes/proposal.js')(app);
 
 // 404 Error page
 // app.use(function (req, res, next) {
