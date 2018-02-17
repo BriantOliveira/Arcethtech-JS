@@ -11,6 +11,7 @@ const express = require('express')
 const hbs = require('express-handlebars')
 const jwt = require('jsonwebtoken')
 const path = require('path')
+const favicon = require('serve-favicon')
 
 
 // Initializing express
@@ -23,7 +24,7 @@ const PORT = process.env.PORT || 8000
 * Check for a token on request
 ****************************************/
 
-let verifyAuthenticcation = (req, res, next) => {
+let verifyAuthentication = (req, res, next) => {
     if (typeof req.cookies.jtwToken === 'undefined' || req.cookies.jtwToken === null){
         req.user = null;
     } else {
@@ -43,3 +44,12 @@ let verifyAuthenticcation = (req, res, next) => {
 /***************************************
 * Middlewarez
 ****************************************/
+
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(cookieParser());
+app.use(BodyParser.urlencoded({extended: true}));
+app.use(verifyAuthentication)
+
+// Setting up the frontend  views engine
+app.engine('bhs', hbs({defaultLayout: 'main', extname: 'hbs'}));
+app.set('views engine', 'hbs')
