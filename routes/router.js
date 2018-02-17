@@ -8,6 +8,6 @@
 module.exports = function(app) {
     //INDEX
     app.get('/', function(req, res) {
-        res.send("MAIN PAGE")
-    })
+        res.render('index.hbs')
+    });
 };

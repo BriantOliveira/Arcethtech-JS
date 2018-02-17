@@ -4,7 +4,7 @@
 *   and existing concepts.
 *   v.1.0.0 Beta
 ************************************/
-
+require('dotenv').config()
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const express = require('express')
@@ -45,20 +45,22 @@ let verifyAuthentication = (req, res, next) => {
 * Middlewarez
 ****************************************/
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(verifyAuthentication)
 
 // Setting up the frontend  views engine
-app.engine('bhs', hbs({defaultLayout: 'main', extname: 'hbs'}));
+app.engine('hbs', hbs({defaultLayout: 'main', extname: 'hbs'}));
 app.set('views engine', 'hbs');
 
 //Static public directory
 app.use(express.static('./public'))
 
+// Routes
+require('./routes/router.js')(app);
 
-// // 404 Error page
+// 404 Error page
 // app.use(function (req, res, next) {
 //     var err = new Error('Not Found...');
 //     err.status = 404;
@@ -68,12 +70,9 @@ app.use(express.static('./public'))
 //     if (err.status == 404) {
 //
 //         //User frendly error message display
-//         res.send('* 404 ERROR *');
+//         res.redirect('/404.html');
 //     };
 // });
-
-// Routes
-require('./routes/router.js')(app);
 
 //Listen to PORT number
 app.listen(PORT, function() {
