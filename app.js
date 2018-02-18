@@ -4,7 +4,10 @@
 *   and existing concepts.
 *   v.1.0.0 Beta
 ************************************/
-require('dotenv').config()
+if (!process.env.PORT) {
+  require('dotenv').config()
+};
+
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const express = require('express')
@@ -13,12 +16,18 @@ const jwt = require('jsonwebtoken')
 const path = require('path')
 const favicon = require('serve-favicon')
 
-
 // Initializing express
 const app = express()
 
+// Routes
+require('./routes/router')(app);
+require('./routes/comments')(app);
+// require('./routes/proposal')(app);
+// require('./routes/index-prop')(app);
+
+
 // Defining PORT number
-const PORT = process.env.PORT || 8000
+const PORT = process.env.PORT || 8042
 
 /***************************************
 * Check for a token on request
@@ -44,37 +53,24 @@ let verifyAuthentication = (req, res, next) => {
 /***************************************
 * Middlewarez
 ****************************************/
-
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(cookieParser());
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(verifyAuthentication)
-
 // Setting up the frontend  views engine
 app.engine('hbs', hbs({defaultLayout: 'main', extname: 'hbs'}));
 app.set('views engine', 'hbs');
 
+
+// Setup handlebars view engine and pass in parameters
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(verifyAuthentication)
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
+
+
 //Static public directory
 app.use(express.static('./public'))
 
-// Routes
-require('./routes/router.js')(app);
 
-// 404 Error page
-// app.use(function (req, res, next) {
-//     var err = new Error('Not Found...');
-//     err.status = 404;
-//     next(err);
-// });
-// app.use(function (err, req, res, next) {
-//     if (err.status == 404) {
-//
-//         //User frendly error message display
-//         res.redirect('/404.html');
-//     };
-// });
-
-//Listen to PORT number
 app.listen(PORT, function() {
     console.log('Arcethtech listening on port ', PORT);
 });
+module.exports = app;

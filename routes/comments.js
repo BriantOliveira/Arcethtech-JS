@@ -1,6 +1,6 @@
 const express = require('express');
 
-module.exports = function({mergeParams: true}, app) {
+module.exports = function(app) {
 
     //CREATE
     app.post('/', (req, res) => {
